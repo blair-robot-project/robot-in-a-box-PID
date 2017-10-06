@@ -61,11 +61,6 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		//Refresh the current time.
 		currentTimeMillis = System.currentTimeMillis();
-
-		//Do the startup tasks
-//		if (robotMap.getTeleopStartupCommand() != null) {
-//			robotMap.getTeleopStartupCommand().start();
-//		}
 	}
 
 	/**

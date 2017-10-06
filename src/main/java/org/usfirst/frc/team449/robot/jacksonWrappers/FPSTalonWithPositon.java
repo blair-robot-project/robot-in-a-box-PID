@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 
 import java.util.List;
 
 /**
  * A variant of FPSTalon that adds more position functionality.
  */
-public class FPSTalonWithPositon extends FPSTalon{
+public class FPSTalonWithPositon extends FPSTalon {
 
 	/**
 	 * Default constructor.
