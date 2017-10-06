@@ -1,13 +1,12 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonWithPositon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.SubsystemBinaryMotor;
 
 /**
  * A binary motor subsystem that uses PID to go to a given position when turned on.
@@ -34,7 +33,7 @@ public class BinaryMotorGoToPos extends YamlSubsystem implements SubsystemBinary
 	/**
 	 * Default constructor
 	 *
-	 * @param talon The talon to move to the given position.
+	 * @param talon        The talon to move to the given position.
 	 * @param positionFeet The position, in feet, for the talon to go to. Defaults to 0.
 	 */
 	@JsonCreator
@@ -49,7 +48,8 @@ public class BinaryMotorGoToPos extends YamlSubsystem implements SubsystemBinary
 	 * Do nothing.
 	 */
 	@Override
-	protected void initDefaultCommand() {}
+	protected void initDefaultCommand() {
+	}
 
 	/**
 	 * Turns the motor on, and sets it to a map-specified position.

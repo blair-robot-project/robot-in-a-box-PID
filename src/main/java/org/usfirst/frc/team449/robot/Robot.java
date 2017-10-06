@@ -26,6 +26,14 @@ public class Robot extends IterativeRobot {
 	 * The time robotInit started running.
 	 */
 	private static long startTime;
+	/**
+	 * The object constructed directly from the yaml map.
+	 */
+	private RobotMapRiabPID robotMap;
+	/**
+	 * The Notifier running the logging thread.
+	 */
+	private Notifier loggerNotifier;
 
 	/**
 	 * Get the current time, in milliseconds, since startup.
@@ -36,16 +44,6 @@ public class Robot extends IterativeRobot {
 	public static long currentTimeMillis() {
 		return currentTimeMillis - startTime;
 	}
-
-	/**
-	 * The object constructed directly from the yaml map.
-	 */
-	private RobotMapRiabPID robotMap;
-
-	/**
-	 * The Notifier running the logging thread.
-	 */
-	private Notifier loggerNotifier;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
