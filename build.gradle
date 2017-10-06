@@ -30,7 +30,7 @@ wpi {
 }
 
 dependencies {
-	compile 'com.github.blair-robot-project:robot2017:c296e12'
+	compile 'com.github.blair-robot-project:robot2017:make_protected-SNAPSHOT'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
