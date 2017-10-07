@@ -2,6 +2,38 @@
 logger:
     '@id': logger
     subsystems:
+        -   org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.BinaryMotorGoToPosChangePID:
+                '@id': binaryMotorSubsystem
+                pInput:
+                    &pInput
+                    '@id': pInput
+                    port: 0
+                    oversampleBits: 4
+                    averageBits: 2
+                iInput:
+                    <<: *pInput
+                    '@id': iInput
+                    port: 1
+                dInput:
+                    <<: *pInput
+                    '@id': dInput
+                    port: 2
+                talon:
+                    org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonPIDExposed:
+                        '@id': talon
+                        port: 10
+                        inverted: false
+                        reverseOutput: false
+                        reverseSensor: false
+                        enableBrakeMode: false
+                        maxClosedLoopVoltage: 12
+                        feedbackDevice: QuadEncoder
+                        encoderCPR: 512
+                        perGearSettings:
+                            -   maxSpeed: 0
+                                kP: 3
+                                kI: 0.03
+                                kD: 30
     loopTimeSecs: 0.5
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
@@ -18,37 +50,7 @@ buttons:
                 '@id': turnOn
                 subsystem:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.BinaryMotorGoToPosChangePID:
-                        '@id': binaryMotorSubsystem
-                        pInput:
-                            &pInput
-                            '@id': pInput
-                            port: 0
-                            oversampleBits: 4
-                            averageBits: 2
-                        iInput:
-                            <<: *pInput
-                            '@id': iInput
-                            port: 1
-                        dInput:
-                            <<: *dInput
-                            '@id': dInput
-                            port: 2
-                        talon:
-                            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonPIDExposed:
-                                '@id': talon
-                                port: 1
-                                inverted: false
-                                reverseOutput: false
-                                reverseSensor: false
-                                enableBrakeMode: false
-                                maxClosedLoopVoltage: 12
-                                feedbackDevice: QuadEncoder
-                                encoderCPR: 512
-                                perGearSettings:
-                                    maxSpeed: 0
-                                    kP: 3
-                                    kI: 0.03
-                                    kD: 30
+                        binaryMotorSubsystem
         action: WHEN_PRESSED
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.ButtonDigitalInput:

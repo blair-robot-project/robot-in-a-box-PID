@@ -3,13 +3,14 @@ package org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonPIDExposed;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAnalogInput;
 
 /**
  * A binaryMotorGoToPos that sets the Talon PID values to a value read in from an analog input when the motor is turned on.
  */
-public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos {
+public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos implements Loggable {
 
 	/**
 	 * The talon to move to the given position.
@@ -51,5 +52,27 @@ public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos {
 	public void turnMotorOn() {
 		talon.setPID(pInput.getPercentValue(), iInput.getPercentValue(), dInput.getPercentValue());
 		super.turnMotorOn();
+	}
+
+	@NotNull
+	@Override
+	public String[] getHeader() {
+		return new String[]{
+				"position",
+				"kP",
+				"kI",
+				"kD"
+		};
+	}
+
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{
+				talon.getPositionFeet(),
+				pInput.getPercentValue(),
+				iInput.getPercentValue(),
+				dInput.getPercentValue()
+		};
 	}
 }

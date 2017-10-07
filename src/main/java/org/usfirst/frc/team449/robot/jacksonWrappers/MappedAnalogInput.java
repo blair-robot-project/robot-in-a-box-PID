@@ -34,6 +34,6 @@ public class MappedAnalogInput extends AnalogInput {
 	 * @return The value of the analog input on [-1,1], scaled so that 5 volts is 1 and 0 volts is 0.
 	 */
 	public double getPercentValue() {
-		return (double) getAverageValue() / 1024.;
+		return (double) getAverageValue();
 	}
 }
