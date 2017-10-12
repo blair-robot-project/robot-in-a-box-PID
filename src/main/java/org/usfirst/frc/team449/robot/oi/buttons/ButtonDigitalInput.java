@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 
 /**
  * A button triggered off of a digital input switch on the RoboRIO.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ButtonDigitalInput extends FactoryButton{
+public class ButtonDigitalInput extends FactoryButton implements Loggable{
 
 	/**
 	 * The input to read from.
@@ -42,5 +43,27 @@ public class ButtonDigitalInput extends FactoryButton{
 			}
 		}
 		return true;
+	}
+
+	@NotNull
+	@Override
+	public String[] getHeader() {
+		return new String[]{
+				"status"
+		};
+	}
+
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{
+				this.get()
+		};
+	}
+
+	@NotNull
+	@Override
+	public String getName() {
+		return "button";
 	}
 }
