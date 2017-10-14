@@ -6,11 +6,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.AnalogInput;
 
+import org.usfirst.frc.team449.robot.other.Clock;
+
 /**
  * A Jackson-friendly wrapper on WPILib's {@link AnalogInput}.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedAnalogInput extends AnalogInput {
+
+	/**
+	 * The time at which the analog value was last calculated
+	 */
+	private long timeValueCached;
+
+	/**
+	 * The value of analog input, as a percent.
+	 */
+	protected double percentValue;
 
 	/**
 	 * Default constructor.
@@ -29,11 +41,22 @@ public class MappedAnalogInput extends AnalogInput {
 	}
 
 	/**
+	 * Cache the value of the analog input if it hasn't been cached yet this tic.
+	 */
+	protected void cachePercentValue(){
+		if (timeValueCached < Clock.currentTimeMillis()){
+			percentValue = Math.min(Math.max((getAverageValue()-55.)/64190.,0), 1);
+			timeValueCached = Clock.currentTimeMillis();
+		}
+	}
+
+	/**
 	 * Get the percentage value of the analog input.
 	 *
 	 * @return The value of the analog input on [0,1], scaled so that 5 volts is 1 and 0 volts is 0.
 	 */
 	public double getPercentValue() {
-		return Math.max((getAverageValue()-55.)/64190.,0);
+		cachePercentValue();
+		return percentValue;
 	}
 }
