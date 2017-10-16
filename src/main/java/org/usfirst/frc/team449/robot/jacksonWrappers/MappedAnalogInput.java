@@ -45,7 +45,8 @@ public class MappedAnalogInput extends AnalogInput {
 	 */
 	protected void cachePercentValue(){
 		if (timeValueCached < Clock.currentTimeMillis()){
-			percentValue = Math.min(Math.max((getAverageValue()-55.)/64190.,0), 1);
+			//Round to 3 decimal places and clip to between 0 and 1.
+			percentValue = Math.min(Math.max(Math.round((getAverageValue()-55.)/64190.*1000.)/1000.,0), 1);
 			timeValueCached = Clock.currentTimeMillis();
 		}
 	}

@@ -24,16 +24,16 @@ logger:
                         port: 10
                         inverted: false
                         reverseOutput: false
-                        reverseSensor: false
+                        reverseSensor: true
                         enableBrakeMode: false
-                        maxClosedLoopVoltage: 12
+                        maxClosedLoopVoltage: 6
                         feedbackDevice: QuadEncoder
                         encoderCPR: 512
                         perGearSettings:
                             -   maxSpeed: 0
-                                kP: 3
-                                kI: 0.03
-                                kD: 30
+                                kP: 7.5
+                                kI: 0.06
+                                kD: 180
         - org.usfirst.frc.team449.robot.oi.buttons.ButtonDigitalInput:
             '@id': DIButton
             input:
