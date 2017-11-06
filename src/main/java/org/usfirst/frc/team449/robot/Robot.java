@@ -6,7 +6,6 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.yaml.snakeyaml.Yaml;
@@ -24,12 +23,13 @@ public class Robot extends IterativeRobot {
 	 * The absolute filepath to the resources folder containing the config files.
 	 */
 	@NotNull
-	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
+	private static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 
 	/**
 	 * The object constructed directly from the yaml map.
 	 */
 	private RobotMapRiabPID robotMap;
+
 	/**
 	 * The Notifier running the logging thread.
 	 */
@@ -61,8 +61,15 @@ public class Robot extends IterativeRobot {
 			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
+
+		//Read sensors
+		robotMap.getUpdater().run();
+
 		//Set fields from the map.
 		this.loggerNotifier = new Notifier(robotMap.getLogger());
+
+		//Log after init
+		robotMap.getLogger().run();
 	}
 
 	/**
@@ -72,6 +79,11 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		//Refresh the current time.
 		Clock.updateTime();
+
+		//Read sensors
+		robotMap.getUpdater().run();
+
+		//Start logging
 		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
 	}
 
@@ -82,6 +94,10 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		//Refresh the current time.
 		Clock.updateTime();
+
+		//Read sensors
+		robotMap.getUpdater().run();
+
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 	}

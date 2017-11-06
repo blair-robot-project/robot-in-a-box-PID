@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonWithPositon;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonWithPosition;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 
 /**
@@ -18,7 +18,7 @@ public class BinaryMotorGoToPos extends YamlSubsystem implements SubsystemBinary
 	 * The talon to move to the given position.
 	 */
 	@NotNull
-	private final FPSTalonWithPositon talon;
+	private final FPSTalonWithPosition talon;
 
 	/**
 	 * The position, in feet, for the talon to go to.
@@ -37,7 +37,7 @@ public class BinaryMotorGoToPos extends YamlSubsystem implements SubsystemBinary
 	 * @param positionFeet The position, in feet, for the talon to go to. Defaults to 0.
 	 */
 	@JsonCreator
-	public BinaryMotorGoToPos(@JsonProperty(required = true) @NotNull FPSTalonWithPositon talon,
+	public BinaryMotorGoToPos(@JsonProperty(required = true) @NotNull FPSTalonWithPosition talon,
 	                          double positionFeet) {
 		this.talon = talon;
 		this.positionFeet = positionFeet;

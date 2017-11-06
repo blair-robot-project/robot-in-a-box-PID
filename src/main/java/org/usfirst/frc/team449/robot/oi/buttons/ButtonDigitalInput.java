@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedButton;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.other.Clock;
 
@@ -13,12 +13,13 @@ import org.usfirst.frc.team449.robot.other.Clock;
  * A button triggered off of a digital input switch on the RoboRIO.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ButtonDigitalInput extends FactoryButton implements Loggable{
+public class ButtonDigitalInput extends MappedButton {
 
 	/**
-	 * The time at which the value for this button was cached
+	 * The input to read from.
 	 */
-	private long timeValueCached;
+	@NotNull
+	private final MappedDigitalInput input;
 
 	/**
 	 * True if all inputs are true, false otherwise
@@ -26,10 +27,9 @@ public class ButtonDigitalInput extends FactoryButton implements Loggable{
 	protected boolean value;
 
 	/**
-	 * The input to read from.
+	 * The time at which the value for this button was cached
 	 */
-	@NotNull
-	private final MappedDigitalInput input;
+	private long timeValueCached;
 
 	/**
 	 * Default constructor.
@@ -44,7 +44,7 @@ public class ButtonDigitalInput extends FactoryButton implements Loggable{
 	/**
 	 * Cache the value of the input if it hasn't been done yet this tic, otherwise do nothing.
 	 */
-	protected void cacheValue(){
+	protected void cacheValue() {
 		if (timeValueCached < Clock.currentTimeMillis()) {
 			value = true;
 			for (Boolean b : input.getStatus()) {
@@ -66,42 +66,5 @@ public class ButtonDigitalInput extends FactoryButton implements Loggable{
 	public boolean get() {
 		cacheValue();
 		return value;
-	}
-
-	/**
-	 * Get the headers for the data this subsystem logs every loop.
-	 *
-	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
-	 */
-	@NotNull
-	@Override
-	public String[] getHeader() {
-		return new String[]{
-				"status"
-		};
-	}
-
-	/**
-	 * Get the data this subsystem logs every loop.
-	 *
-	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
-	 */
-	@NotNull
-	@Override
-	public Object[] getData() {
-		return new Object[]{
-				get()
-		};
-	}
-
-	/**
-	 * Get the name of this object.
-	 *
-	 * @return A string that will identify this object in the log file.
-	 */
-	@NotNull
-	@Override
-	public String getName() {
-		return "Button";
 	}
 }

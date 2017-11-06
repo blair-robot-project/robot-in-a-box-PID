@@ -1,10 +1,7 @@
 package org.usfirst.frc.team449.robot.jacksonWrappers;
 
 import com.ctre.CANTalon;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 
@@ -12,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A variant of FPSTalon that exposes setting the PID gains. You really shouldn't use this class unless absolutely
- * necessary.
+ * A variant of FPSTalon that adds more position functionality.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FPSTalonPIDExposed extends FPSTalonWithPosition {
+public class FPSTalonWithPosition extends FPSTalon {
 
 	/**
 	 * Default constructor.
@@ -63,29 +60,29 @@ public class FPSTalonPIDExposed extends FPSTalonWithPosition {
 	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
 	 */
 	@JsonCreator
-	public FPSTalonPIDExposed(@JsonProperty(required = true) int port,
-	                          boolean invertInVoltage,
-	                          boolean reverseOutput,
-	                          @JsonProperty(required = true) boolean enableBrakeMode,
-	                          @Nullable Boolean fwdLimitSwitchNormallyOpen,
-	                          @Nullable Boolean revLimitSwitchNormallyOpen,
-	                          @Nullable Double fwdSoftLimit,
-	                          @Nullable Double revSoftLimit,
-	                          @Nullable Double postEncoderGearing,
-	                          @Nullable Double feetPerRotation,
-	                          @Nullable Integer currentLimit,
-	                          double maxClosedLoopVoltage,
-	                          @Nullable CANTalon.FeedbackDevice feedbackDevice,
-	                          @Nullable Integer encoderCPR,
-	                          boolean reverseSensor,
-	                          @Nullable List<PerGearSettings> perGearSettings,
-	                          @Nullable Shiftable.gear startingGear,
-	                          @Nullable Integer startingGearNum,
-	                          @Nullable Integer minNumPointsInBottomBuffer,
-	                          @Nullable Double updaterProcessPeriodSecs,
-	                          @Nullable Map<CANTalon.StatusFrameRate, Integer> statusFrameRatesMillis,
-	                          @Nullable Integer controlFrameRateMillis,
-	                          @Nullable List<SlaveTalon> slaves) {
+	public FPSTalonWithPosition(@JsonProperty(required = true) int port,
+	                            boolean invertInVoltage,
+	                            boolean reverseOutput,
+	                            @JsonProperty(required = true) boolean enableBrakeMode,
+	                            @Nullable Boolean fwdLimitSwitchNormallyOpen,
+	                            @Nullable Boolean revLimitSwitchNormallyOpen,
+	                            @Nullable Double fwdSoftLimit,
+	                            @Nullable Double revSoftLimit,
+	                            @Nullable Double postEncoderGearing,
+	                            @Nullable Double feetPerRotation,
+	                            @Nullable Integer currentLimit,
+	                            double maxClosedLoopVoltage,
+	                            @Nullable CANTalon.FeedbackDevice feedbackDevice,
+	                            @Nullable Integer encoderCPR,
+	                            boolean reverseSensor,
+	                            @Nullable List<PerGearSettings> perGearSettings,
+	                            @Nullable Shiftable.gear startingGear,
+	                            @Nullable Integer startingGearNum,
+	                            @Nullable Integer minNumPointsInBottomBuffer,
+	                            @Nullable Double updaterProcessPeriodSecs,
+	                            @Nullable Map<CANTalon.StatusFrameRate, Integer> statusFrameRatesMillis,
+	                            @Nullable Integer controlFrameRateMillis,
+	                            @Nullable List<SlaveTalon> slaves) {
 		super(port, invertInVoltage, reverseOutput, enableBrakeMode,
 				fwdLimitSwitchNormallyOpen, revLimitSwitchNormallyOpen, fwdSoftLimit, revSoftLimit, postEncoderGearing,
 				feetPerRotation, currentLimit, maxClosedLoopVoltage, feedbackDevice, encoderCPR, reverseSensor,
@@ -94,14 +91,12 @@ public class FPSTalonPIDExposed extends FPSTalonWithPosition {
 	}
 
 	/**
-	 * Set the PID constants for this Talon.
+	 * Set a position setpoint for the Talon.
 	 *
-	 * @param kP The proportional gain, from [0,1]
-	 * @param kI The integral gain, from [0,1]
-	 * @param kD The derivative gain, from [0,1]
+	 * @param feet An absolute position setpoint, in feet.
 	 */
-	public void setPID(double kP, double kI, double kD) {
-		canTalon.setPID(currentGearSettings.getkP() * kP, currentGearSettings.getkI() * kI, currentGearSettings.getkD() * kD,
-				1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 0);
+	public void setPositionSetpoint(double feet) {
+		canTalon.changeControlMode(CANTalon.TalonControlMode.Position);
+		canTalon.set(feetToEncoder(feet));
 	}
 }

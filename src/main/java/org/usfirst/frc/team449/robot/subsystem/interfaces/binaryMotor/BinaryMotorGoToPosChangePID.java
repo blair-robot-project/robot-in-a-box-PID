@@ -8,7 +8,8 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonPIDExposed;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAnalogInput;
 
 /**
- * A binaryMotorGoToPos that sets the Talon PID values to a value read in from an analog input when the motor is turned on.
+ * A binaryMotorGoToPos that sets the Talon PID values to a value read in from an analog input when the motor is turned
+ * on.
  */
 public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos implements Loggable {
 
@@ -17,6 +18,7 @@ public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos implements L
 	 */
 	@NotNull
 	protected final FPSTalonPIDExposed talon;
+
 	/**
 	 * The analog inputs to read the PID gains from.
 	 */
@@ -50,7 +52,7 @@ public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos implements L
 	 */
 	@Override
 	public void turnMotorOn() {
-		talon.setPID(pInput.getPercentValue(), iInput.getPercentValue(), dInput.getPercentValue());
+		talon.setPID(pInput.getPercentValueCached(), iInput.getPercentValueCached(), dInput.getPercentValueCached());
 		super.turnMotorOn();
 	}
 
@@ -70,9 +72,9 @@ public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos implements L
 	public Object[] getData() {
 		return new Object[]{
 				talon.getPositionFeet(),
-				pInput.getPercentValue(),
-				iInput.getPercentValue(),
-				dInput.getPercentValue()
+				pInput.getPercentValueCached(),
+				iInput.getPercentValueCached(),
+				dInput.getPercentValueCached()
 		};
 	}
 }

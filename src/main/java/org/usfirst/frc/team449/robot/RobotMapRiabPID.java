@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.other.Logger;
 
@@ -26,16 +27,25 @@ public class RobotMapRiabPID {
 	private final Logger logger;
 
 	/**
+	 * A runnable that updates cached variables.
+	 */
+	@NotNull
+	private final Runnable updater;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param buttons The buttons for controlling this robot.
-	 * @param logger The logger for recording events and telemetry data.
+	 * @param logger  The logger for recording events and telemetry data.
+	 * @param updater A runnable that updates cached variables.
 	 */
 	@JsonCreator
 	public RobotMapRiabPID(@NotNull @JsonProperty(required = true) List<CommandButton> buttons,
-	                       @NotNull @JsonProperty(required = true) Logger logger) {
+	                       @NotNull @JsonProperty(required = true) Logger logger,
+	                       @NotNull @JsonProperty(required = true) MappedRunnable updater) {
 		this.buttons = buttons;
 		this.logger = logger;
+		this.updater = updater;
 	}
 
 	/**
@@ -52,5 +62,13 @@ public class RobotMapRiabPID {
 	@NotNull
 	public Logger getLogger() {
 		return logger;
+	}
+
+	/**
+	 * @return A runnable that updates cached variables.
+	 */
+	@NotNull
+	public Runnable getUpdater() {
+		return updater;
 	}
 }
