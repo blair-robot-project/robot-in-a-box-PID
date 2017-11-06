@@ -1,7 +1,9 @@
 package org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonPIDExposed;
@@ -11,6 +13,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAnalogInput;
  * A binaryMotorGoToPos that sets the Talon PID values to a value read in from an analog input when the motor is turned
  * on.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos implements Loggable {
 
 	/**

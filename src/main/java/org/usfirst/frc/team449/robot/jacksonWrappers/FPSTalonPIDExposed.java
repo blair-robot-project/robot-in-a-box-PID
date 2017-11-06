@@ -16,7 +16,7 @@ import java.util.Map;
  * necessary.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FPSTalonPIDExposed extends FPSTalonWithPosition {
+public class FPSTalonPIDExposed extends FPSTalon {
 
 	/**
 	 * Default constructor.
