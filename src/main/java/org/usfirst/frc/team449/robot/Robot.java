@@ -40,6 +40,8 @@ public class Robot extends IterativeRobot {
 
 	private PathRequester pathRequester;
 
+	int length;
+
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
@@ -66,6 +68,8 @@ public class Robot extends IterativeRobot {
 			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
+
+		length = 8;
 
 		//Read sensors
 		robotMap.getUpdater().run();
@@ -98,7 +102,7 @@ public class Robot extends IterativeRobot {
 			robotMap.getStartupCommand().getCommand().start();
 		}
 
-		pathRequester.requestPath(100, 0, 0);
+		pathRequester.requestPath(length, 0, 0);
 
 		//Log
 		loggerNotifier.startSingle(0);
@@ -120,9 +124,9 @@ public class Robot extends IterativeRobot {
 
 		LoadableMotionProfileData[] data = pathRequester.getPath(false, true);
 		if (data != null) {
-			System.out.println(Arrays.deepToString(data[0].getData()));
-		} else {
-			System.out.println("No response yet.");
+			System.out.println("Length: "+data[0].getData().length);
+			length += 1;
+            pathRequester.requestPath(length, 0, 0);
 		}
 
 		//Log

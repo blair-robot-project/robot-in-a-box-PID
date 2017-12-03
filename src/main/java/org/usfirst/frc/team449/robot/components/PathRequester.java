@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.other.LoadableMotionProfileData;
 import org.zeromq.ZMQ;
+import org.zeromq.ZMQException;
 import proto.PathOuterClass;
 import proto.PathRequestOuterClass;
 
@@ -44,6 +45,7 @@ public class PathRequester {
 		ZMQ.Context context = ZMQ.context(1);
 		socket = context.socket(ZMQ.REQ);
 		socket.bind(address);
+		System.out.println("Bound socket to address "+address);
 	}
 
 	/**
@@ -72,7 +74,12 @@ public class PathRequester {
 	@Nullable
 	public LoadableMotionProfileData[] getPath(boolean inverted, boolean resetPosition) {
 		//Read from Jetson
-		output = socket.recv(ZMQ.NOBLOCK);
+        try {
+            output = socket.recv(ZMQ.NOBLOCK);
+        } catch (ZMQException e){
+            System.out.println("Need to request again before receiving.");
+            return null;
+        }
 		if (output == null) {
 			return null;
 		}
@@ -82,7 +89,7 @@ public class PathRequester {
 
 		try {
 			//Read the response
-			path = path.getParserForType().parseFrom(output);
+			path = PathOuterClass.Path.parseFrom(output);
 			leftMotionProfileData = new LoadableMotionProfileData(path.getPosLeftList(), path.getVelLeftList(),
 					path.getAccelLeftList(), path.getDeltaTime(), inverted, false, resetPosition);
 			if (path.getPosRightCount() != 0) {
