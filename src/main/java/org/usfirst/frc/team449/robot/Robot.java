@@ -70,7 +70,7 @@ public class Robot extends IterativeRobot {
 		//Read sensors
 		robotMap.getUpdater().run();
 
-		pathRequester = new PathRequester("tcp://10.4.49.2:5556");
+		pathRequester = new PathRequester("tcp://10.4.49.2:5800");
 
 		//Set fields from the map.
 		this.loggerNotifier = new Notifier(robotMap.getLogger());
