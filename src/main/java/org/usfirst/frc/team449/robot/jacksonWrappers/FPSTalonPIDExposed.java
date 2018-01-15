@@ -1,6 +1,9 @@
 package org.usfirst.frc.team449.robot.jacksonWrappers;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,27 +25,24 @@ public class FPSTalonPIDExposed extends FPSTalon {
 	 * Default constructor.
 	 *
 	 * @param port                       CAN port of this Talon.
-	 * @param invertInVoltage            Whether or not to invert the motor in voltage mode.
-	 * @param reverseOutput              Whether to reverse the output (identical effect to inverting outside of
-	 *                                   position PID)
+	 * @param name                       The talon's name, used for logging purposes. Defaults to talon_portnum
+	 * @param reverseOutput              Whether to reverse the output.
 	 * @param enableBrakeMode            Whether to brake or coast when stopped.
 	 * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
 	 *                                   the forward limit switch is disabled.
 	 * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
 	 *                                   the reverse limit switch is disabled.
 	 * @param fwdSoftLimit               The forward software limit, in feet. If this is null, the forward software
-	 *                                   limit is disabled.
+	 *                                   limit is disabled. Ignored if there's no encoder.
 	 * @param revSoftLimit               The reverse software limit, in feet. If this is null, the reverse software
-	 *                                   limit is disabled.
+	 *                                   limit is disabled. Ignored if there's no encoder.
 	 * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder, e.g.
 	 *                                   this would be 1/70 if there was a 70:1 gearing between the encoder and the
 	 *                                   final output. Defaults to 1.
 	 * @param feetPerRotation            The number of feet travelled per rotation of the motor this is attached to.
 	 *                                   Defaults to 1.
 	 * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
-	 * @param maxClosedLoopVoltage       The voltage to scale closed-loop output based on, e.g. closed-loop output of 1
-	 *                                   will produce this voltage, output of 0.5 will produce half, etc. This feature
-	 *                                   compensates for low battery voltage.
+	 * @param enableVoltageComp          Whether or not to use voltage compensation. Defaults to false.
 	 * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
 	 *                                   null if there is no encoder attached to this Talon.
 	 * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
@@ -59,12 +59,12 @@ public class FPSTalonPIDExposed extends FPSTalon {
 	 * @param updaterProcessPeriodSecs   The period for the Notifier that moves points between the MP buffers, in
 	 *                                   seconds. Defaults to 0.005.
 	 * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
-	 * @param controlFrameRateMillis     The update rate, in milliseconds, for the control frame. Defaults to 10.
-	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
+	 * @param controlFrameRatesMillis    The update rate, in milliseconds, for each of the control frame.
+	 * @param slaves                     The other {@link TalonSRX}s that are slaved to this one.
 	 */
 	@JsonCreator
 	public FPSTalonPIDExposed(@JsonProperty(required = true) int port,
-	                          boolean invertInVoltage,
+	                          @Nullable String name,
 	                          boolean reverseOutput,
 	                          @JsonProperty(required = true) boolean enableBrakeMode,
 	                          @Nullable Boolean fwdLimitSwitchNormallyOpen,
@@ -74,8 +74,8 @@ public class FPSTalonPIDExposed extends FPSTalon {
 	                          @Nullable Double postEncoderGearing,
 	                          @Nullable Double feetPerRotation,
 	                          @Nullable Integer currentLimit,
-	                          double maxClosedLoopVoltage,
-	                          @Nullable CANTalon.FeedbackDevice feedbackDevice,
+	                          boolean enableVoltageComp,
+	                          @Nullable FeedbackDevice feedbackDevice,
 	                          @Nullable Integer encoderCPR,
 	                          boolean reverseSensor,
 	                          @Nullable List<PerGearSettings> perGearSettings,
@@ -83,14 +83,14 @@ public class FPSTalonPIDExposed extends FPSTalon {
 	                          @Nullable Integer startingGearNum,
 	                          @Nullable Integer minNumPointsInBottomBuffer,
 	                          @Nullable Double updaterProcessPeriodSecs,
-	                          @Nullable Map<CANTalon.StatusFrameRate, Integer> statusFrameRatesMillis,
-	                          @Nullable Integer controlFrameRateMillis,
+	                          @Nullable Map<StatusFrameEnhanced, Integer> statusFrameRatesMillis,
+	                          @Nullable Map<ControlFrame, Integer> controlFrameRatesMillis,
 	                          @Nullable List<SlaveTalon> slaves) {
-		super(port, invertInVoltage, reverseOutput, enableBrakeMode,
+		super(port, name, reverseOutput, enableBrakeMode,
 				fwdLimitSwitchNormallyOpen, revLimitSwitchNormallyOpen, fwdSoftLimit, revSoftLimit, postEncoderGearing,
-				feetPerRotation, currentLimit, maxClosedLoopVoltage, feedbackDevice, encoderCPR, reverseSensor,
+				feetPerRotation, currentLimit, enableVoltageComp, feedbackDevice, encoderCPR, reverseSensor,
 				perGearSettings, startingGear, startingGearNum, minNumPointsInBottomBuffer, updaterProcessPeriodSecs,
-				statusFrameRatesMillis, controlFrameRateMillis, slaves);
+				statusFrameRatesMillis, controlFrameRatesMillis, slaves);
 	}
 
 	/**
@@ -101,7 +101,8 @@ public class FPSTalonPIDExposed extends FPSTalon {
 	 * @param kD The derivative gain, from [0,1]
 	 */
 	public void setPID(double kP, double kI, double kD) {
-		canTalon.setPID(currentGearSettings.getkP() * kP, currentGearSettings.getkI() * kI, currentGearSettings.getkD() * kD,
-				1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 0);
+		canTalon.config_kP(0, kP, 0);
+		canTalon.config_kI(0, kI, 0);
+		canTalon.config_kD(0, kD, 0);
 	}
 }

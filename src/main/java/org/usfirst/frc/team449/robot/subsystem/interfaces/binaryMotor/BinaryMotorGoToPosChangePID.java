@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalonPIDExposed;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAnalogInput;
 
@@ -14,7 +13,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAnalogInput;
  * on.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos implements Loggable {
+public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos {
 
 	/**
 	 * The talon to move to the given position.
@@ -57,27 +56,5 @@ public class BinaryMotorGoToPosChangePID extends BinaryMotorGoToPos implements L
 	public void turnMotorOn() {
 		talon.setPID(pInput.getPercentValueCached(), iInput.getPercentValueCached(), dInput.getPercentValueCached());
 		super.turnMotorOn();
-	}
-
-	@NotNull
-	@Override
-	public String[] getHeader() {
-		return new String[]{
-				"position",
-				"kP",
-				"kI",
-				"kD"
-		};
-	}
-
-	@NotNull
-	@Override
-	public Object[] getData() {
-		return new Object[]{
-				talon.getPositionFeet(),
-				pInput.getPercentValueCached(),
-				iInput.getPercentValueCached(),
-				dInput.getPercentValueCached()
-		};
 	}
 }
