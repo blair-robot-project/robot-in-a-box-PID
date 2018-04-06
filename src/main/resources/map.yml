@@ -34,6 +34,16 @@ logger:
         - org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput:
             '@id': onOffSwitch
             channel: 0
+        - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+           '@id': talon2
+           port: 11
+           reverseOutput: false
+           reverseSensor: false
+           enableBrakeMode: true
+           enableVoltageComp: true
+           currentLimit: 20
+           perGearSettings:
+               - fwdPeakOutputVoltage: 6
     loopTimeSecs: 0.5
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
@@ -73,6 +83,30 @@ buttons:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.BinaryMotorGoToPosChangePID:
                         binaryMotorSubsystem
         action: WHEN_RELEASED
+    -   button:
+defaultCommands:
+    - subsystem:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+            '@id': elevator
+            motor:
+                org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                    talon2
+      command:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.commands.ControlAnalogMotorWithThrottle:
+            '@id': elevatorDefaultCommand
+            subsystem:
+                org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+                    elevator
+            throttle:
+                org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
+                    '@id': elevatorThrottle
+                    stick:
+                        org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                            '@id': controller
+                            port: 1
+                    axis: 2
+                    deadband: 0.05
+                    inverted: true
 updater:
     org.usfirst.frc.team449.robot.other.Updater:
         '@id': updater
