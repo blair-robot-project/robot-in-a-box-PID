@@ -101,8 +101,8 @@ public class FPSTalonPIDExposed extends FPSTalon {
 	 * @param kD The derivative gain, from [0,1]
 	 */
 	public void setPID(double kP, double kI, double kD) {
-		canTalon.config_kP(0, kP, 0);
-		canTalon.config_kI(0, kI, 0);
-		canTalon.config_kD(0, kD, 0);
+		canTalon.config_kP(0, kP*currentGearSettings.getkP(), 0);
+		canTalon.config_kI(0, kI*currentGearSettings.getkI(), 0);
+		canTalon.config_kD(0, kD*currentGearSettings.getkD(), 0);
 	}
 }
